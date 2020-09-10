@@ -8,7 +8,27 @@
 <body>
    <div class="score"></div>
    <div class="game">
-      <div class="start">Чтобы начать игру кликни сюда:</div>
+      <div class="start">
+         <div class="intro">
+            <h1 class="logo">Races</h1>
+            <p class="chose_">Выберите уровень сложности</p>
+            <ul class="levels">
+               <li class="level easy">Легкий</li>
+               <li class="level norm">Средний</li>
+               <li class="level hard">Сложный</li>
+            </ul>
+            <span class="version">v.1.0.1</span>
+         </div>
+         <div class="gameover hide">
+            <span class="mess">Потрачено</span>
+            <span class="total_score"></span>
+            <div class="new_record hide">(Новый рекорд!)</div>
+            <div class="btns">
+               <button class="btn btn_replay">Играть заново</button>
+               <button class="btn btn_choose">Выбрать уровень</button>
+            </div>
+         </div>
+      </div>
       <div class="gameArea"></div>
    </div>
 
