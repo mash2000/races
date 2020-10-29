@@ -308,3 +308,9 @@ table {
 .hard {
    background: rgb(160, 44, 44);
 }
+
+.sound {
+   position: fixed;
+   top: 10;
+   left: 10;
+}
