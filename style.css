@@ -1,4 +1,5 @@
 /*! reset css  */
+
 html,
 body,
 div,
@@ -80,15 +81,17 @@ time,
 mark,
 audio,
 video {
-   margin: 0;
-   padding: 0;
-   border: 0;
-   font-size: 100%;
-   font: inherit;
-   vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 
+
 /* HTML5 display-role reset for older browsers */
+
 article,
 aside,
 details,
@@ -100,217 +103,309 @@ hgroup,
 menu,
 nav,
 section {
-   display: block;
+    display: block;
 }
 
 body {
-   line-height: 1;
+    line-height: 1;
 }
 
 ol,
 ul {
-   list-style: none;
+    list-style: none;
 }
 
 blockquote,
 q {
-   quotes: none;
+    quotes: none;
 }
 
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-   content: '';
-   content: none;
+    content: '';
+    content: none;
 }
 
 table {
-   border-collapse: collapse;
-   border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
+
 
 /** css code */
 
 .hide {
-   display: none;
-   visibility: hidden;
+    display: none;
+    visibility: hidden;
 }
 
-.car, .enemy {
-   width: 50px;
-   height: 100px;
-   background: transparent url('./image/player2.png') center / cover no-repeat;
-   position: absolute;
-   left: 125px;
-   bottom: 10px;
+.car,
+.enemy {
+    width: 50px;
+    height: 100px;
+    background: transparent url('./image/player.png') center / cover no-repeat;
+    position: absolute;
+    left: 125px;
+    bottom: 10px;
+    margin: 0;
+    padding: 0;
 }
 
 .gameArea {
-   width: 300px;
-   height: 100%;
-   position: relative;
-   margin: auto;
-   background: #222;
-   overflow: hidden;
-   opacity: 0.3;
+    width: 300px;
+    height: 100%;
+    position: relative;
+    margin: auto;
+    background: #222;
+    overflow: hidden;
+    opacity: 0.3;
 }
 
 .line {
-   position: absolute;
-   width: 10px;
-   height: 50px;
-   background: #fff;
+    position: absolute;
+    width: 10px;
+    height: 50px;
+    background: #fff;
+}
+
+.game {
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 100;
 }
 
 .start {
-   position: fixed;
-   left: 0px;
-   top: 0px;
-   width: 100%;
-   height: 100vh;
-   margin: 0;
-   padding: 2rem 0;
-   text-align: center;
-   z-index: 200;
-   color: #000;
-   font-size: 1.5rem;
-   font-family: sans-serif;
-   font-weight: 700;
-   display: flex;
-   justify-content: center;
-   align-items: center;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 2rem 0;
+    text-align: center;
+    z-index: 200;
+    color: #000;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .score {
-   position: absolute;
-   right: 20px;
-   top: 0px;
-   margin: 0;
-   text-align: right;
-   line-height: 25px;
-   padding: 1rem 0;
-   z-index: 200;
-   color: skyblue;
-   font-size: 1.5rem;
-   cursor: pointer;
-   font-family: sans-serif;
-   font-weight: 500;
-   font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 0px;
+    margin: 0;
+    text-align: right;
+    line-height: 25px;
+    padding: 1rem 0;
+    z-index: 200;
+    color: skyblue;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-weight: bold;
 }
 
 .count {
-   font-weight: 300;
-   color: rgb(0, 0, 0);
+    font-weight: 300;
+    color: rgb(0, 0, 0);
 }
 
 .logo {
-   font-size: 40px;
-   font-weight: 700;
-   font-family: "Porsche";
-   margin-bottom: 30px;
-   color: #360033;
-   color: -webkit-linear-gradient(to right, #360033, #0b8793);
-   color: linear-gradient(to right, #360033, #0b8793);
-   position: relative;
-   overflow: hidden;
+    font-size: 40px;
+    font-weight: 700;
+    font-family: "Porsche";
+    margin-bottom: 30px;
+    color: #360033;
+    color: -webkit-linear-gradient(to right, #360033, #0b8793);
+    color: linear-gradient(to right, #360033, #0b8793);
+    position: relative;
+    overflow: hidden;
 }
 
 .mess {
-   display: none;
-   margin-bottom: 30px;
-   color: rgb(160, 44, 44);
+    display: none;
+    margin-bottom: 30px;
+    color: rgb(160, 44, 44);
 }
 
-.total_score {
-
-}
+.total_score {}
 
 .new_record {
-   margin-top: 15px;
-   font-size: 15px;
-   color: rgb(0, 139, 182);
-   font-family: 'Courier New', Courier, monospace;
+    margin-top: 15px;
+    font-size: 15px;
+    color: rgb(0, 139, 182);
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .btns {
-   margin-top: 20px;
+    margin-top: 20px;
 }
 
 .btn {
-   display: inline-block;
-   border: 0;
-   padding: 10px 16px;
-   border-radius: 4px;
-   margin: 0px 5px;
-   cursor: pointer;
-   outline: none;
-   font-size: 18px;
+    display: inline-block;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin: 0px 5px;
+    cursor: pointer;
+    outline: none;
+    font-size: 18px;
 }
 
 .btn_replay {
-   background: rgb(28, 114, 148);
-   color: #fff;
+    background: rgb(28, 114, 148);
+    color: #fff;
 }
 
 .btn_choose {
-   background: green;
-   color: #fff;
+    background: green;
+    color: #fff;
 }
 
 .version {
-   position: absolute;
-   right: 20px;
-   bottom: 80px;
-   font-size: 20px;
-   color: #999;
-   font-weight: 500;
+    position: absolute;
+    right: 20px;
+    bottom: 80px;
+    font-size: 20px;
+    color: #999;
+    font-weight: 500;
 }
 
 .levels {
-   margin-top: 20px;
+    margin-top: 20px;
 }
 
 .level {
-   border-radius: 4px;
-   padding: 13px 20px;
-   margin: 0px 10px;
-   display: inline-block;
-   color: #fff;
-   cursor: pointer;
-   transition-duration: 0.2s;
-   border: 2px soild transparent;
+    border-radius: 4px;
+    padding: 13px 20px;
+    margin: 0px 10px;
+    display: inline-block;
+    color: #fff;
+    cursor: pointer;
+    transition-duration: 0.2s;
+    border: 2px soild transparent;
 }
 
-.level:hover, .btn:hover {
-   transition-duration: 0.2s;
-   transform: translateY(-5px);
-   box-shadow: 0px 5px 2px 0px #111;
-   border-color: #000;
-   -moz-border-radius: 4px;
-   -ms-border-radius: 4px;
+.level:hover,
+.btn:hover {
+    transition-duration: 0.2s;
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 2px 0px #111;
+    border-color: #000;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
 }
 
-.level:active, .btn:active {
-   transition-duration: 0.2s;
-   transform: translateY(0);
-   box-shadow: none;
+.level:active,
+.btn:active {
+    transition-duration: 0.2s;
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .easy {
-   background: green;
+    background: green;
 }
 
 .norm {
-   background: rgb(28, 114, 148);
+    background: rgb(28, 114, 148);
 }
 
 .hard {
-   background: rgb(160, 44, 44);
+    background: rgb(160, 44, 44);
+}
+
+.soundBox {
+    position: fixed;
+    top: 10;
+    left: 10;
+    z-index: 1001;
 }
 
 .sound {
-   position: fixed;
-   top: 10;
-   left: 10;
+    cursor: pointer;
+}
+
+
+/** game-menu */
+
+.game-link {
+    display: block;
+    text-decoration: none;
+    color: #000;
+    margin-top: 20px;
+}
+
+.back {
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 24px;
+    color: #000;
+    font-weight: 400;
+    font-size: 20px;
+    position: relative;
+    line-height: 20px;
+}
+
+.back::before {
+    content: url("./image/arrow.svg");
+    position: absolute;
+    left: -85%;
+    top: -2px;
+    transform: scaleX(0.3) scaleY(0.5);
+}
+
+.pause {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-family: "Roboto", sans-serif;
+    color: skyblue;
+    z-index: 1000;
+}
+
+.bgColor {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.boxColor {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.cars {
+    margin-top: 20px;
+}
+
+.changeCar {
+    margin-top: 20px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.vehicle {
+    width: 60px;
+}
+
+.lbl_car {
+    display: flex;
+    flex-direction: column;
 }

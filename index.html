@@ -1,39 +1,72 @@
 <html>
 
 <head>
-   <title>Races</title>
-   <link rel="stylesheet" href="./style.css">
+    <title>Races</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-   <div class="sound">sound</div>
-   <div class="score"></div>
-   <div class="game">
-      <div class="start">
-         <div class="intro">
-            <h1 class="logo">Races</h1>
-            <p class="chose_">Выберите уровень сложности</p>
-            <ul class="levels">
-               <li class="level easy">Легкий</li>
-               <li class="level norm">Средний</li>
-               <li class="level hard">Сложный</li>
-            </ul>
-            <span class="version">v.1.0.1</span>
-         </div>
-         <div class="gameover hide">
-            <span class="mess">Потрачено</span>
-            <span class="total_score"></span>
-            <div class="new_record hide">(Новый рекорд!)</div>
-            <div class="btns">
-               <button class="btn btn_replay">Играть заново</button>
-               <button class="btn btn_choose">Выбрать уровень</button>
-            </div>
-         </div>
-      </div>
-      <div class="gameArea"></div>
-   </div>
+    <div class="soundBox"></div>
+    <div class="score"></div>
+    <div class="pause hide">Pause</div>
+    <div class="game">
+        <div class="start">
+            <div class="intro">
+                <div class="game-menu">
+                    <h1 class="logo">Races</h1>
+                    <ul class="game-menu">
+                        <li class="game-punct">
+                            <a href="#" class="game-link play">Играть</a>
+                        </li>
+                        <li class="game-punct">
+                            <a href="#" class="game-link sets">Настройки</a>
+                        </li>
+                        <li class="game-punct">
+                            <a href="#" class="game-link reference">Справка</a>
+                        </li>
+                        <li class="game-punct">
+                            <a href="#" class="game-link authors">Авторы</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="levels hide">
+                    <p class="chose">Выберите уровень сложности</p>
+                    <ul class="levels">
+                        <li class="level easy">Легкий</li>
+                        <li class="level norm">Средний</li>
+                        <li class="level hard">Сложный</li>
+                    </ul>
+                    <a href="#" class="back">Назад</a>
+                </div>
+                <div class="settings hide">
+                    <div class="colors">
+                        <h3 class="title-color">Цвет фона</h3>
+                        <ul class="bgColor"></ul>
+                    </div>
+                    <div class="cars">
+                        <h3 class="title-car">Выбор машины</h3>
+                        <ul class="changeCar"></ul>
+                    </div>
+                    <a href="#" class="back">Назад</a>
+                </div>
+                <span class="version">v.1.0.1</span>
 
-   <script src="./main.js"></script>
+            </div>
+            <div class="gameover hide">
+                <span class="mess">Потрачено</span>
+                <span class="total_score"></span>
+                <div class="new_record hide">(Новый рекорд!)</div>
+                <div class="btns">
+                    <button class="btn btn_replay">Играть заново</button>
+                    <button class="btn btn_choose">Выбрать уровень</button>
+                </div>
+            </div>
+        </div>
+        <div class="gameArea"></div>
+    </div>
+
+    <script src="./libs/vue.js"></script>
+    <script src="./main.js"></script>
 
 </body>
 
