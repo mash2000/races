@@ -13,6 +13,8 @@
         btn_replay = document.querySelector('.btn_replay'),
         block_levels = document.querySelector('.levels'),
         sets = document.querySelector('.settings'),
+        reference = document.querySelector('.reference'),
+        authors = document.querySelector('.authors'),
         game = document.querySelector('.game'),
         new_record = document.querySelector('.new_record'),
         car = document.createElement('div');
@@ -46,14 +48,21 @@
         brake: new Audio(),
         crash: new Audio(),
         acceleration: new Audio(),
+        signal: new Audio(),
         cars: ['enemy', 'enemy2'],
         sound: true,
         spareCar: null,
-        vehicles: ['player', 'player2'],
+        vehicles: [
+            { vehicle: 'player', chose: true },
+            { vehicle: 'player2', chose: false },
+        ],
         bgColors: [
-            "#d4d4d4", "skyblue", "#ffffff"
+            { color: "rgb(212, 212, 212)", chose: false },
+            { color: "skyblue", chose: false },
+            { color: "rgb(255, 255, 255)", chose: true },
         ],
         smooth: 6,
+        t: null,
     };
 
     const levels = {
@@ -86,7 +95,7 @@
         gameArea.innerHTML = '';
         gameArea.style.opacity = '1';
 
-        for (let i = 0; i < getQuantityElements(100); i++) {
+        for (let i = 0; i < getQuantityElements(50); i++) {
             const line = document.createElement('div');
             line.classList.add('line');
             line.style.top = (i * 100) + 'px';
@@ -95,21 +104,13 @@
             gameArea.appendChild(line);
         }
 
-        for (let i = 0; i < getQuantityElements(100 * setting.traffic); i++) {
+        for (let i = 0; i < getQuantityElements(1000 * setting.traffic); i++) {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
             enemy.y = -100 * setting.traffic * (i + 1);
             enemy.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 50)) + 'px';
             enemy.style.top = enemy.y + 'px';
             enemy.style.background = `transparent url(./image/${setting.cars[Math.floor(Math.random()*setting.cars.length)]}.png) center / cover no-repeat`;
-            if (i > 0) {
-                let car = setting.spareCar;
-                if (Math.abs(car.offsetTop - enemy.offsetTop) < (2.5 * parseInt(enemy.style.height))) {
-                    enemy.style.top = enemy.y - 2.5 * parseInt(enemy.style.height) + 'px';
-                }
-            } else {
-                setting.spareCar = enemy;
-            }
             gameArea.appendChild(enemy);
         }
         setting.score = 0;
@@ -120,8 +121,11 @@
         car.style.bottom = "10px";
         setting.x = car.offsetLeft;
         setting.y = car.offsetTop;
-
-        toggleSound();
+        setting.vehicles.forEach(vhc => {
+            if (vhc.chose == true) {
+                car.style.background = `transparent url(./image/${vhc.vehicle}.png) center / cover no-repeat`;
+            }
+        })
 
         if (setting.sound) {
             setting.engine.src = './audio/moving.mp3';
@@ -134,9 +138,26 @@
 
             setting.acceleration.src = './audio/acceleration.mp3';
             setting.acceleration.loop = true;
+
+            setting.signal.src = './audio/signal.mp3';
+            setting.signal.loop = true;
         }
 
         requestAnimationFrame(playGame);
+    }
+
+    function background() {
+        let back = setting.bgColors;
+        back.forEach(bg => {
+            if (bg.chose == true) {
+                game.style.backgroundColor = bg.color;
+            }
+        })
+    }
+
+    function render() {
+        toggleSound();
+        background();
     }
 
     function toggleSound() {
@@ -166,10 +187,10 @@
             moveRoad();
             moveEnemy();
             if (keys.ArrowLeft && setting.x > 0) {
-                setting.x -= setting.speed;
+                setting.x -= setting.speed / 2;
             }
             if (keys.ArrowRight && setting.x < (gameArea.offsetWidth - car.offsetWidth)) {
-                setting.x += setting.speed;
+                setting.x += setting.speed / 2;
             }
 
             if (keys.ArrowDown && setting.y < (gameArea.offsetHeight - car.offsetHeight)) {
@@ -263,7 +284,6 @@
                 saveRecords();
                 setting.crash.play();
                 setting.start = false;
-                console.log('ДТП');
                 mess.style.display = 'block';
                 score.classList.add('hide');
                 gameover.classList.remove('hide');
@@ -291,7 +311,8 @@
             clr.classList.add('color');
             let bxColor = document.createElement('div');
             bxColor.classList.add('boxColor');
-            bxColor.style.backgroundColor = color;
+            bxColor.style.backgroundColor = color.color;
+            if (color.chose) bxColor.classList.add('choseColor');
             clr.appendChild(bxColor);
             bgColor.appendChild(clr);
         });
@@ -301,20 +322,17 @@
         let cars = document.querySelector('.changeCar');
         cars.innerHTML = '';
         let vehicles = setting.vehicles;
-        let t = true;
         vehicles.forEach(vehicle => {
             let vhc = document.createElement('li');
             let vhcLook = document.createElement('img');
             let radioCar = document.createElement('input');
             radioCar.type = 'radio';
-            radioCar.id = vehicle;
+            radioCar.id = vehicle.vehicle;
             radioCar.name = 'car';
-            if (t) {
-                radioCar.checked = t;
-                t = false;
-            }
+            radioCar.checked = vehicle.chose;
             vhcLook.classList.add('vehicle');
-            vhcLook.src = './image/' + vehicle + '.png';
+            vhcLook.src = './image/' + vehicle.vehicle + '.png';
+            vhcLook.classList.add(vehicle.vehicle);
             let labelCar = document.createElement('label');
             labelCar.classList.add('lbl_car');
             labelCar.setAttribute("for", radioCar.id);
@@ -325,6 +343,7 @@
         });
     }
 
+    render();
 
     block_levels.addEventListener('click', event => {
         const target = event.target;
@@ -372,27 +391,75 @@
             sets.classList.remove('hide');
             gameMenu.classList.add('hide');
         }
+        if (target.classList.contains('refer')) {
+            reference.classList.remove('hide');
+            gameMenu.classList.add('hide');
+        }
+        if (target.classList.contains('author')) {
+            authors.classList.remove('hide');
+            gameMenu.classList.add('hide');
+            sound.classList.add('hide');
+        }
         if (target.classList.contains('back')) {
             target.parentNode.classList.add('hide');
             gameMenu.classList.remove('hide');
         }
+        if (target.classList.contains('close')) {
+            target.parentNode.classList.add('hide');
+            gameMenu.classList.remove('hide');
+            sound.classList.remove('hide');
+        }
         if (target.classList.contains('boxColor')) {
-            let clr = target.style.backgroundColor;
-            game.style.backgroundColor = clr;
+            let color = target.style.backgroundColor;
+            let clrs = document.querySelectorAll('.boxColor');
+            clrs.forEach(clr => {
+                clr.classList.remove('choseColor')
+            })
+            clrs = setting.bgColors;
+            clrs.forEach(clr => {
+                clr.chose = false;
+                if (clr.color == color) {
+                    clr.chose = true;
+                }
+            })
+            game.style.backgroundColor = color;
+            getColors();
         }
         if (target.classList.contains('vehicle')) {
-            let skin = target.src;
-            car.style.background = `transparent url(${skin}) center / cover no-repeat`;
+            let car = target.classList[1];
+            setting.vehicles.forEach(vehicle => {
+                vehicle.chose = false;
+                if (vehicle.vehicle == car) {
+                    vehicle.chose = true
+                }
+            })
+            console.log(setting.vehicles);
+            getCars();
         }
-        console.log(target);
     });
 
     document.body.addEventListener('keydown', event => {
-        const key = event.key;
-        if (key === "Escape" && start.classList.contains('hide')) {
+        const keyCode = event.keyCode;
+        if (keyCode === 27 && start.classList.contains('hide')) {
             pause.classList.toggle('hide');
             setting.start = !setting.start;
             if (setting.start) playGame();
         }
+        if (keyCode === 16 && start.classList.contains('hide')) {
+            setting.signal.play();
+        }
+        if (keyCode === 88) {
+            setting.sound = !setting.sound;
+            toggleSound();
+        }
     });
+
+    document.body.addEventListener('keyup', event => {
+        const keyCode = event.keyCode;
+        if (keyCode === 16) {
+            setting.signal.pause();
+            setting.signal.currentTime = 0;
+        }
+    });
+
 })();

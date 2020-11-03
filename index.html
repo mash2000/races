@@ -2,6 +2,7 @@
 
 <head>
     <title>Races</title>
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -22,10 +23,10 @@
                             <a href="#" class="game-link sets">Настройки</a>
                         </li>
                         <li class="game-punct">
-                            <a href="#" class="game-link reference">Справка</a>
+                            <a href="#" class="game-link refer">Справка</a>
                         </li>
                         <li class="game-punct">
-                            <a href="#" class="game-link authors">Авторы</a>
+                            <a href="#" class="game-link author">Авторы</a>
                         </li>
                     </ul>
                 </div>
@@ -49,11 +50,60 @@
                     </div>
                     <a href="#" class="back">Назад</a>
                 </div>
+                <div class="reference hide">
+                    <p class="chose">Инструкция к игре</p>
+                    <div class="instructions">
+                        <table class="keys">
+                            <tr>
+                                <td class="key">&#8593;</td>
+                                <td class="action">Газ</td>
+                            </tr>
+                            <tr>
+                                <td class="key">&#8595;</td>
+                                <td class="action">Тормоз</td>
+                            </tr>
+                            <tr>
+                                <td class="key">&#8592;</td>
+                                <td class="action">Влево</td>
+                            </tr>
+                            <tr>
+                                <td class="key">&#8594;</td>
+                                <td class="action">Вправо</td>
+                            </tr>
+                            <tr>
+                                <td class="key">ESC</td>
+                                <td class="action">Пауза</td>
+                            </tr>
+                            <tr>
+                                <td class="key">X</td>
+                                <td class="action">Звук</td>
+                            </tr>
+                            <tr>
+                                <td class="key">Shift</td>
+                                <td class="action">Би-Бип</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <a href="#" class="back">Назад</a>
+                </div>
+                <div class="authors hide">
+                    <div class="congrulations">
+                        <p class="logo">RACES</p>
+                        <span>Developed by <br><strong class="company">Shayla</strong></span>
+                        <ul class="list">
+                            <li class="list-action">Author: Shirshikov Maksim</li>
+                            <li class="list-action">Designer: Shirshikov Maksim</li>
+                            <li class="list-action">Developer: Shirshikov Maksim</li>
+                            <li class="list-action">Artist: Shirshikov Maksim</li>
+                        </ul>
+                    </div>
+                    <a href="#" class="close">&#967;</a>
+                </div>
                 <span class="version">v.1.0.1</span>
 
             </div>
             <div class="gameover hide">
-                <span class="mess">Потрачено</span>
+                <span class="mess">Авария!</span>
                 <span class="total_score"></span>
                 <div class="new_record hide">(Новый рекорд!)</div>
                 <div class="btns">
@@ -65,7 +115,6 @@
         <div class="gameArea"></div>
     </div>
 
-    <script src="./libs/vue.js"></script>
     <script src="./main.js"></script>
 
 </body>
