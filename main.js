@@ -11,12 +11,16 @@
         gameover = document.querySelector('.gameover'),
         btn_choose = document.querySelector('.btn_choose'),
         btn_replay = document.querySelector('.btn_replay'),
+        btn_exit = document.querySelector('.btn_exit'),
         block_levels = document.querySelector('.levels'),
         sets = document.querySelector('.settings'),
         reference = document.querySelector('.reference'),
+        results = document.querySelector('.results'),
         authors = document.querySelector('.authors'),
         game = document.querySelector('.game'),
         new_record = document.querySelector('.new_record'),
+        speedmetr = document.querySelector('.speedmetr'),
+
         car = document.createElement('div');
 
     car.classList.add('car');
@@ -53,16 +57,19 @@
         sound: true,
         spareCar: null,
         vehicles: [
-            { vehicle: 'player', chose: true },
-            { vehicle: 'player2', chose: false },
+            { name: "Mersedes", maxSpeed: 22, vehicle: 'player', chose: true },
+            { name: "Mitsubishi", maxSpeed: 20, vehicle: 'player2', chose: false },
         ],
-        bgColors: [
-            { color: "rgb(212, 212, 212)", chose: false },
-            { color: "skyblue", chose: false },
-            { color: "rgb(255, 255, 255)", chose: true },
+        themes: [
+            { bg: "bg-1", chose: false, color: "rgb(0,0,0)" },
+            { bg: "bg-2", chose: false, color: "rgb(0,0,0)" },
+            { bg: "bg-3", chose: true, color: "rgb(0,0,0)" },
         ],
         smooth: 6,
         t: null,
+        minSpeed: 2.5,
+        balance: 0,
+        maxAngle: 5,
     };
 
     const levels = {
@@ -72,12 +79,14 @@
         },
         norm: {
             speed: 5,
-            traffic: 4
+            traffic: 5
         },
         hard: {
             speed: 7,
-            traffic: 5
-        }
+            traffic: 7
+        },
+        currentSpeed: null,
+        maxSpeed: null
     };
 
     const saveRecords = () => localStorage.setItem('records', JSON.stringify(records));
@@ -87,6 +96,8 @@
     }
 
     function startGame() {
+        pause.classList.add('hide');
+        gameArea.classList.remove('hide');
         gameover.classList.add('hide');
         start.classList.add('hide');
         intro.classList.add('hide');
@@ -94,6 +105,11 @@
         score.classList.remove('hide');
         gameArea.innerHTML = '';
         gameArea.style.opacity = '1';
+
+        if (gameover.classList.contains('hide')) {
+            setting.currentBoost = setting.startBoost;
+            levels.currentSpeed = setting.speed;
+        }
 
         for (let i = 0; i < getQuantityElements(50); i++) {
             const line = document.createElement('div');
@@ -104,6 +120,7 @@
             gameArea.appendChild(line);
         }
 
+        // спавн автомобилей
         for (let i = 0; i < getQuantityElements(1000 * setting.traffic); i++) {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
@@ -114,16 +131,18 @@
             gameArea.appendChild(enemy);
         }
         setting.score = 0;
+        setting.balance = 0;
         setting.start = true;
         gameArea.appendChild(car);
         car.style.left = gameArea.offsetWidth / 2 - car.offsetWidth / 2;
         car.style.top = "auto";
-        car.style.bottom = "10px";
+        car.style.bottom = "250px";
         setting.x = car.offsetLeft;
         setting.y = car.offsetTop;
         setting.vehicles.forEach(vhc => {
             if (vhc.chose == true) {
                 car.style.background = `transparent url(./image/${vhc.vehicle}.png) center / cover no-repeat`;
+                levels.maxSpeed = vhc.maxSpeed;
             }
         })
 
@@ -146,18 +165,30 @@
         requestAnimationFrame(playGame);
     }
 
-    function background() {
-        let back = setting.bgColors;
+    function theme() {
+        let back = setting.themes;
         back.forEach(bg => {
             if (bg.chose == true) {
-                game.style.backgroundColor = bg.color;
+                gameMenu.querySelectorAll('.game-link').forEach(link => {
+                    link.style.color = bg.color;
+                })
+                game.querySelectorAll('.back').forEach(close => {
+                    close.style.color = bg.color;
+                })
+                game.style.color = bg.color;
+                game.style.backgroundImage = `url(../image/${bg.bg}.jpg)`;
             }
         })
     }
 
+    function speedMeter() {
+        speedmetr.querySelector('.speedView').value = levels.currentSpeed.toFixed(1) * 10 + ' км/ч';
+        speedmetr.querySelector('.moveSpeed').style.left = (levels.currentSpeed / levels.maxSpeed).toFixed(2) * 100 + '%';
+    }
+
     function render() {
         toggleSound();
-        background();
+        theme();
     }
 
     function toggleSound() {
@@ -165,10 +196,10 @@
             sound.innerHTML = `<svg>
                <use class="sound" xlink:href="./image/icons.svg#Sound-on"></use>
             </svg>`
-            setting.engine.volume = 0.5;
-            setting.brake.volume = 0.5;
-            setting.crash.volume = 0.5;
-            setting.acceleration.volume = 0.5;
+            setting.engine.volume = 0.3;
+            setting.brake.volume = 0.3;
+            setting.crash.volume = 0.3;
+            setting.acceleration.volume = 0.3;
         } else {
             sound.innerHTML = `<svg>
                <use class="sound" xlink:href="./image/icons.svg#Sound-off"></use>
@@ -182,33 +213,68 @@
 
     function playGame() {
         if (setting.start) {
-            setting.score += setting.speed;
+            setting.score += parseInt(levels.currentSpeed);
             score.innerHTML = `Score: <br> <span class='count'>${setting.score}</span>`;
+            speedMeter();
             moveRoad();
             moveEnemy();
             if (keys.ArrowLeft && setting.x > 0) {
-                setting.x -= setting.speed / 2;
+                if (-setting.balance < setting.maxAngle) setting.balance -= 0.5;
+                car.style.transform = `rotateZ(${setting.balance}deg)`;
+                console.log(setting.balance);
+                setting.x -= levels.currentSpeed / 2.5;
             }
             if (keys.ArrowRight && setting.x < (gameArea.offsetWidth - car.offsetWidth)) {
-                setting.x += setting.speed / 2;
+                if (setting.maxAngle > setting.balance) setting.balance += 0.5;
+                car.style.transform = `rotateZ(${setting.balance}deg)`;
+                console.log(setting.balance);
+                setting.x += levels.currentSpeed / 2.5;
             }
 
             if (keys.ArrowDown && setting.y < (gameArea.offsetHeight - car.offsetHeight)) {
-                setting.y += setting.speed;
-                setting.score -= setting.speed;
+                if (levels.currentSpeed > setting.minSpeed) {
+                    if (levels.currentSpeed > 10 && levels.currentSpeed <= 20) {
+                        levels.currentSpeed -= 0.3;
+                    } else if (levels.currentSpeed > 20) levels.currentSpeed -= 0.1;
+                    else levels.currentSpeed -= 0.4;
+                }
+                setting.score -= parseInt(levels.currentSpeed);
                 setting.engine.pause();
                 setting.brake.play();
             } else if (keys.ArrowUp && setting.y > 0) {
-                setting.y -= setting.speed;
-                setting.score += setting.speed;
+                if (levels.currentSpeed < levels.maxSpeed) {
+                    if (levels.currentSpeed > 10 && levels.currentSpeed <= 20) levels.currentSpeed += 0.05;
+                    else if (levels.maxSpeed - levels.currentSpeed < 0.4) levels.currentSpeed += 0.001;
+                    else if (levels.currentSpeed > 20) levels.currentSpeed += 0.01;
+                    else {
+                        levels.currentSpeed += 0.1;
+                    }
+                }
+                setting.score += parseInt(levels.currentSpeed);
                 setting.engine.pause();
                 setting.acceleration.play();
             } else if (!keys.ArrowUp && !setting.ArrowDown) {
+                if (levels.currentSpeed < setting.speed) levels.currentSpeed += 0.3;
+                else if (levels.currentSpeed > setting.speed) {
+                    if (levels.currentSpeed > 10) levels.currentSpeed -= 0.02;
+                    else if (levels.currentSpeed > 20) levels.currentSpeed -= 0.009;
+                    else levels.currentSpeed -= 0.05;
+                }
                 setting.brake.pause();
                 setting.acceleration.pause();
                 setting.brake.currentTime = 0;
                 setting.acceleration.currentTime = 0;
                 setting.engine.play();
+            }
+            if (!keys.ArrowLeft && !keys.ArrowRight) {
+                if (setting.balance < 0) {
+                    setting.balance += 0.5;
+                    car.style.transform = `rotateZ(${setting.balance}deg)`;
+                } else if (setting.balance >= 0) {
+                    setting.balance -= 0.5;
+                    car.style.transform = `rotateZ(${setting.balance}deg)`;
+                }
+                console.log(setting.balance);
             }
             car.style.left = setting.x + 'px';
             car.style.top = setting.y + 'px';
@@ -236,7 +302,7 @@
     function moveRoad() {
         let lines = document.querySelectorAll('.line');
         lines.forEach(line => {
-            line.y += setting.speed;
+            line.y += parseInt(levels.currentSpeed);
             line.style.top = line.y + 'px';
 
             if (line.y >= document.documentElement.clientHeight) {
@@ -286,13 +352,12 @@
                 setting.start = false;
                 mess.style.display = 'block';
                 score.classList.add('hide');
+                start.classList.remove('hide');
                 gameover.classList.remove('hide');
                 total_score.innerHTML = `Счёт: ${setting.score}`;
-                start.classList.remove('hide');
-                gameArea.style.opacity = '0.3';
             }
 
-            item.y += setting.speed / 2;
+            item.y += levels.currentSpeed / 2;
             item.style.top = item.y + "px";
 
             if (item.y >= document.documentElement.clientHeight) {
@@ -302,19 +367,19 @@
         });
     }
 
-    function getColors() {
-        let bgColor = document.querySelector('.bgColor');
-        bgColor.innerHTML = '';
-        let colors = setting.bgColors;
-        colors.forEach(color => {
+    function getBgs() {
+        let bg = document.querySelector('.bgColor');
+        bg.innerHTML = '';
+        let bgs = setting.themes;
+        bgs.forEach(bcolor => {
             let clr = document.createElement('li');
             clr.classList.add('color');
             let bxColor = document.createElement('div');
             bxColor.classList.add('boxColor');
-            bxColor.style.backgroundColor = color.color;
-            if (color.chose) bxColor.classList.add('choseColor');
+            bxColor.style.backgroundImage = `url(../image/${bcolor.bg}.jpg)`;
+            if (bcolor.chose) bxColor.classList.add('choseColor');
             clr.appendChild(bxColor);
-            bgColor.appendChild(clr);
+            bg.appendChild(clr);
         });
     }
 
@@ -358,6 +423,7 @@
                 setting.speed = levels.hard.speed;
                 setting.traffic = levels.hard.traffic;
             }
+            levels.currentSpeed = setting.speed;
             startGame();
         }
     });
@@ -365,6 +431,14 @@
     document.addEventListener('keyup', stopRun);
 
     btn_replay.addEventListener('click', startGame);
+    btn_exit.addEventListener('click', e => {
+        gameArea.classList.add('hide');
+        pause.classList.add('hide');
+        gameMenu.classList.remove('hide');
+        start.classList.remove('hide');
+        block_levels.classList.add('hide');
+        intro.classList.remove('hide');
+    });
     btn_choose.addEventListener('click', () => {
         gameover.classList.add('hide');
         start.classList.remove('hide');
@@ -386,7 +460,7 @@
             gameMenu.classList.add('hide');
         }
         if (target.classList.contains('sets')) {
-            getColors();
+            getBgs();
             getCars();
             sets.classList.remove('hide');
             gameMenu.classList.add('hide');
@@ -395,12 +469,38 @@
             reference.classList.remove('hide');
             gameMenu.classList.add('hide');
         }
+        if (target.classList.contains('record')) {
+            results.classList.remove('hide');
+            gameMenu.classList.add('hide');
+            let best = JSON.parse(localStorage.getItem('records')).bestRecord;
+            let res = document.querySelectorAll('.result');
+            res.forEach(r => {
+                r.innerHTML = '';
+                let title = document.createElement('h3');
+                title.classList.add('record-title');
+                let rec = document.createElement('span');
+                rec.classList.add('res-value')
+                if (r.classList.contains('result-easy')) {
+                    title.textContent = "Легкий";
+                    rec.innerHTML = best.easy;
+                } else if (r.classList.contains('result-norm')) {
+                    title.textContent = "Средний";
+                    rec.textContent = best.norm;
+                } else if (r.classList.contains('result-hard')) {
+                    title.textContent = "Сложный";
+                    rec.textContent = best.hard;
+                }
+                r.appendChild(title);
+                r.appendChild(rec);
+            })
+        }
         if (target.classList.contains('author')) {
             authors.classList.remove('hide');
             gameMenu.classList.add('hide');
             sound.classList.add('hide');
         }
         if (target.classList.contains('back')) {
+            gameArea.classList.add('hide');
             target.parentNode.classList.add('hide');
             gameMenu.classList.remove('hide');
         }
@@ -410,31 +510,40 @@
             sound.classList.remove('hide');
         }
         if (target.classList.contains('boxColor')) {
-            let color = target.style.backgroundColor;
+            let color = target.style.backgroundImage;
             let clrs = document.querySelectorAll('.boxColor');
             clrs.forEach(clr => {
                 clr.classList.remove('choseColor')
             })
-            clrs = setting.bgColors;
+            clrs = setting.themes;
             clrs.forEach(clr => {
                 clr.chose = false;
-                if (clr.color == color) {
+                let trueBG = color.substring(color.lastIndexOf('/') + 1, color.lastIndexOf('.'));
+                if (clr.bg == trueBG) {
                     clr.chose = true;
                 }
             })
-            game.style.backgroundColor = color;
-            getColors();
+            game.style.backgroundImage = color;
+            getBgs();
         }
         if (target.classList.contains('vehicle')) {
             let car = target.classList[1];
             setting.vehicles.forEach(vehicle => {
                 vehicle.chose = false;
                 if (vehicle.vehicle == car) {
-                    vehicle.chose = true
+                    vehicle.chose = true;
+                    levels.maxSpeed = vehicle.maxSpeed;
                 }
             })
             console.log(setting.vehicles);
             getCars();
+        }
+    });
+
+    document.body.addEventListener('click', e => {
+        const target = e.target;
+        if (target.classList.contains('speedmetr')) {
+            speedmetr.querySelector('.speedStatus').classList.toggle('moveSpeed');
         }
     });
 
@@ -444,6 +553,11 @@
             pause.classList.toggle('hide');
             setting.start = !setting.start;
             if (setting.start) playGame();
+        }
+        if (keyCode === 27 && !authors.classList.contains('hide')) {
+            authors.classList.add('hide');
+            gameMenu.classList.remove('hide');
+            sound.classList.remove('hide');
         }
         if (keyCode === 16 && start.classList.contains('hide')) {
             setting.signal.play();
@@ -461,5 +575,7 @@
             setting.signal.currentTime = 0;
         }
     });
+
+    // console.log('../../sdsd.jpg'.substring('../../sdsd.jpg'.lastIndexOf('/') + 1, '../../sdsd.jpg'.lastIndexOf('.')));
 
 })();

@@ -2,19 +2,32 @@
 
 <head>
     <title>Races</title>
-    <link rel="shortcut icon" href="#">
+    <link rel="shortcut icon" href="./image/logo.svg">
     <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
     <div class="soundBox"></div>
     <div class="score"></div>
-    <div class="pause hide">Pause</div>
+    <div class="speedmetr">
+        <input type="text" class="speedView">
+        <div class="speedStatus">
+            <div class="moveSpeed"></div>
+        </div>
+    </div>
+    <div class="pause hide">
+        <h2>Пауза</h2>
+        <div class="btns">
+            <button class="btn_exit">Выйти</button>
+        </div>
+    </div>
     <div class="game">
         <div class="start">
             <div class="intro">
                 <div class="game-menu">
-                    <h1 class="logo">Races</h1>
+                    <h1 class="logo">
+                        <img src="./image/logo.svg" alt="Logo" class="logo">
+                    </h1>
                     <ul class="game-menu">
                         <li class="game-punct">
                             <a href="#" class="game-link play">Играть</a>
@@ -24,6 +37,9 @@
                         </li>
                         <li class="game-punct">
                             <a href="#" class="game-link refer">Справка</a>
+                        </li>
+                        <li class="game-punct">
+                            <a href="#" class="game-link record">Рекорды</a>
                         </li>
                         <li class="game-punct">
                             <a href="#" class="game-link author">Авторы</a>
@@ -86,9 +102,20 @@
                     </div>
                     <a href="#" class="back">Назад</a>
                 </div>
+                <div class="results hide">
+                    <h2 class="best-title">Лучшие результаты</h2>
+                    <div class="box-results">
+                        <div class="result result-easy"></div>
+                        <div class="result result-norm"></div>
+                        <div class="result result-hard"></div>
+                    </div>
+                    <a href="#" class="back">Назад</a>
+                </div>
                 <div class="authors hide">
                     <div class="congrulations">
-                        <p class="logo">RACES</p>
+                        <p class="logo">
+                            <img src="./image/logo.svg" alt="Logo">
+                        </p>
                         <span>Developed by <br><strong class="company">Shayla</strong></span>
                         <ul class="list">
                             <li class="list-action">Author: Shirshikov Maksim</li>
@@ -112,7 +139,7 @@
                 </div>
             </div>
         </div>
-        <div class="gameArea"></div>
+        <div class="gameArea hide"></div>
     </div>
 
     <script src="./main.js"></script>

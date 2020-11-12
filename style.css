@@ -162,7 +162,6 @@ table {
     margin: auto;
     background: #222;
     overflow: hidden;
-    opacity: 0.3;
 }
 
 .line {
@@ -173,7 +172,6 @@ table {
 }
 
 .game {
-    background-color: #fff;
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 100;
@@ -196,6 +194,7 @@ table {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgb(235, 235, 235);
 }
 
 .score {
@@ -224,12 +223,12 @@ table {
     font-size: 40px;
     font-weight: 700;
     font-family: "Porsche";
-    margin-bottom: 30px;
     color: #360033;
     color: -webkit-linear-gradient(to right, #360033, #0b8793);
     color: linear-gradient(to right, #360033, #0b8793);
     position: relative;
     overflow: hidden;
+    margin-bottom: 20px;
 }
 
 .mess {
@@ -237,8 +236,6 @@ table {
     margin-bottom: 30px;
     color: rgb(160, 44, 44);
 }
-
-.total_score {}
 
 .new_record {
     margin-top: 15px;
@@ -269,6 +266,11 @@ table {
 
 .btn_choose {
     background: green;
+    color: #fff;
+}
+
+.btn_exit {
+    background: brown;
     color: #fff;
 }
 
@@ -343,7 +345,18 @@ table {
     display: block;
     text-decoration: none;
     color: #000;
+    transition-duration: .1s;
     margin-top: 20px;
+}
+
+.game-link:hover {
+    transition-duration: .1s;
+    transform: translateY(-15%);
+    box-shadow: 0px 1px 0px 0px #000;
+}
+
+.game-link:active {
+    transform: translateY(0%);
 }
 
 .back {
@@ -358,11 +371,10 @@ table {
 }
 
 .back::before {
-    content: url("./image/arrow.svg");
+    content: "←";
     position: absolute;
-    left: -85%;
+    left: -50%;
     top: -2px;
-    transform: scaleX(0.3) scaleY(0.5);
 }
 
 .pause {
@@ -372,12 +384,14 @@ table {
     width: 100%;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 28px;
     font-family: "Roboto", sans-serif;
-    color: skyblue;
+    color: #000;
     z-index: 1000;
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .bgColor {
@@ -390,6 +404,7 @@ table {
     width: 50px;
     height: 50px;
     cursor: pointer;
+    border: 3px solid transparent;
 }
 
 .cars {
@@ -413,10 +428,8 @@ table {
 }
 
 .choseColor {
-    border: 2px solid #000;
+    border: 3px solid yellow;
 }
-
-.settings {}
 
 
 /** reference */
@@ -480,6 +493,64 @@ table {
 .list-action {
     margin-top: 30px;
     text-align: center;
+}
+
+.box-results {
+    margin: 50px 0px;
+}
+
+.result {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.res-value {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.best-title {
+    font-size: 28px;
+}
+
+.record-title {
+    font-size: 20px;
+}
+
+.speedmetr {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 18px;
+    background-color: #000;
+    color: #fff;
+    padding: 20px 15px;
+    width: 200px;
+}
+
+.speedView {
+    text-align: center;
+    font-size: 24px;
+    width: 100%;
+}
+
+.speedStatus {
+    width: 200px;
+    height: 20px;
+    margin-top: 11px;
+    position: relative;
+    transform-style: preserve-3d;
+    overflow-x: hidden;
+    background: linear-gradient(90deg, #05FF00 0%, #FFA800 52.08%, #FF0000 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF);
+    clip-path: polygon(0% 70%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.moveSpeed {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
 }
 
 @keyframes authors {
