@@ -1,6 +1,8 @@
 (function() {
     const score = document.querySelector('.score'),
-        sound = document.querySelector('.soundBox'),
+        soundBox = document.querySelector('.soundBox'),
+        sound = document.querySelector('.box-sound'),
+        music = document.querySelector('.box-music'),
         pause = document.querySelector('.pause'),
         intro = document.querySelector('.intro'),
         start = document.querySelector('.start'),
@@ -53,37 +55,40 @@
         crash: new Audio(),
         acceleration: new Audio(),
         signal: new Audio(),
+        song: new Audio(),
         cars: ['enemy', 'enemy2'],
-        sound: true,
+        sound: false,
+        music: false,
         spareCar: null,
         vehicles: [
             { name: "Mersedes", maxSpeed: 22, vehicle: 'player', chose: true },
             { name: "Mitsubishi", maxSpeed: 20, vehicle: 'player2', chose: false },
         ],
         themes: [
-            { bg: "bg-1", chose: false, color: "rgb(0,0,0)" },
+            { bg: "bg-1", chose: true, color: "rgb(0,0,0)" },
             { bg: "bg-2", chose: false, color: "rgb(0,0,0)" },
-            { bg: "bg-3", chose: true, color: "rgb(0,0,0)" },
+            { bg: "bg-3", chose: false, color: "rgb(0,0,0)" },
         ],
         smooth: 6,
         t: null,
         minSpeed: 2.5,
         balance: 0,
         maxAngle: 5,
+        boost: 3000
     };
 
     const levels = {
         easy: {
-            speed: 3,
-            traffic: 3
+            speed: 4,
+            traffic: 7
         },
         norm: {
-            speed: 5,
+            speed: 7,
             traffic: 5
         },
         hard: {
-            speed: 7,
-            traffic: 7
+            speed: 10,
+            traffic: 4
         },
         currentSpeed: null,
         maxSpeed: null
@@ -94,6 +99,9 @@
     function getQuantityElements(heightElement) {
         return document.documentElement.clientHeight / heightElement + 1;
     }
+
+    setting.song.src = './audio/song.mp3';
+    setting.song.loop = true;
 
     function startGame() {
         pause.classList.add('hide');
@@ -111,7 +119,7 @@
             levels.currentSpeed = setting.speed;
         }
 
-        for (let i = 0; i < getQuantityElements(50); i++) {
+        for (let i = 0; i < getQuantityElements(100); i++) {
             const line = document.createElement('div');
             line.classList.add('line');
             line.style.top = (i * 100) + 'px';
@@ -121,15 +129,23 @@
         }
 
         // спавн автомобилей
-        for (let i = 0; i < getQuantityElements(1000 * setting.traffic); i++) {
+        for (let i = 0; i < getQuantityElements(100 * setting.traffic); i++) {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
-            enemy.y = -100 * setting.traffic * (i + 1);
+            enemy.y = -(Math.floor(25 + Math.random() + 125)) * setting.traffic * (i + 1);
             enemy.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 50)) + 'px';
             enemy.style.top = enemy.y + 'px';
             enemy.style.background = `transparent url(./image/${setting.cars[Math.floor(Math.random()*setting.cars.length)]}.png) center / cover no-repeat`;
             gameArea.appendChild(enemy);
         }
+        document.querySelectorAll('.enemy').forEach(enemy => {
+            document.querySelectorAll('.enemy').forEach(enm => {
+                if (Math.abs(enemy.offsetTop - enm.offsetTop) <= enemy.offsetHeight) {
+                    enemy.style.top -= enemy.offsetHeight + 'px';
+                    console.log('top');
+                }
+            })
+        });
         setting.score = 0;
         setting.balance = 0;
         setting.start = true;
@@ -146,20 +162,23 @@
             }
         })
 
-        if (setting.sound) {
-            setting.engine.src = './audio/moving.mp3';
-            setting.engine.loop = true;
+        setting.engine.src = './audio/moving.mp3';
+        setting.engine.loop = true;
 
-            setting.brake.src = './audio/stop.mp3';
-            setting.brake.loop = true;
+        setting.brake.src = './audio/stop.mp3';
+        setting.brake.loop = true;
 
-            setting.crash.src = './audio/crash.mp3';
+        setting.crash.src = './audio/crash.mp3';
 
-            setting.acceleration.src = './audio/acceleration.mp3';
-            setting.acceleration.loop = true;
+        setting.acceleration.src = './audio/acceleration.mp3';
+        setting.acceleration.loop = true;
 
-            setting.signal.src = './audio/signal.mp3';
-            setting.signal.loop = true;
+        setting.signal.src = './audio/signal.mp3';
+        setting.signal.loop = false;
+
+        if (setting.music) {
+            setting.song.currentTime = 0;
+            setting.song.play();
         }
 
         requestAnimationFrame(playGame);
@@ -188,26 +207,35 @@
 
     function render() {
         toggleSound();
+        toggleMusic();
         theme();
     }
 
     function toggleSound() {
         if (setting.sound) {
-            sound.innerHTML = `<svg>
-               <use class="sound" xlink:href="./image/icons.svg#Sound-on"></use>
-            </svg>`
+            sound.innerHTML = `<use class="sound" xlink:href="./image/icons.svg#Sound-on"></use>`
             setting.engine.volume = 0.3;
             setting.brake.volume = 0.3;
             setting.crash.volume = 0.3;
             setting.acceleration.volume = 0.3;
         } else {
-            sound.innerHTML = `<svg>
-               <use class="sound" xlink:href="./image/icons.svg#Sound-off"></use>
-            </svg>`
+            sound.innerHTML = `<use class="sound" xlink:href="./image/icons.svg#Sound-off"></use>`
             setting.engine.volume = 0;
             setting.brake.volume = 0;
             setting.crash.volume = 0;
             setting.acceleration.volume = 0;
+        }
+    }
+
+    function toggleMusic() {
+        if (setting.music) {
+            music.innerHTML = `<use class="music" xlink:href="./image/icons.svg#Music-on"></use>`
+            setting.song.currentTime = 0;
+            setting.song.volume = 0.3;
+            if (pause.classList.contains('hide')) setting.song.play();
+        } else {
+            music.innerHTML = `<use class="music" xlink:href="./image/icons.svg#Music-off"></use>`
+            setting.song.pause();
         }
     }
 
@@ -218,6 +246,7 @@
             speedMeter();
             moveRoad();
             moveEnemy();
+            game.style.backgroundPositionY = setting.score + 'px';
             if (keys.ArrowLeft && setting.x > 0) {
                 if (-setting.balance < setting.maxAngle) setting.balance -= 0.5;
                 car.style.transform = `rotateZ(${setting.balance}deg)`;
@@ -238,7 +267,7 @@
                     } else if (levels.currentSpeed > 20) levels.currentSpeed -= 0.1;
                     else levels.currentSpeed -= 0.4;
                 }
-                setting.score -= parseInt(levels.currentSpeed);
+                setting.score -= parseInt(levels.currentSpeed / 3);
                 setting.engine.pause();
                 setting.brake.play();
             } else if (keys.ArrowUp && setting.y > 0) {
@@ -274,7 +303,12 @@
                     setting.balance -= 0.5;
                     car.style.transform = `rotateZ(${setting.balance}deg)`;
                 }
-                console.log(setting.balance);
+                // console.log(setting.balance);
+            }
+            if (setting.score > setting.boost) {
+                setting.boost *= 3;
+                setting.traffic++;
+                console.log(setting.traffic + 'cars');
             }
             car.style.left = setting.x + 'px';
             car.style.top = setting.y + 'px';
@@ -350,6 +384,7 @@
                 saveRecords();
                 setting.crash.play();
                 setting.start = false;
+                setting.song.pause();
                 mess.style.display = 'block';
                 score.classList.add('hide');
                 start.classList.remove('hide');
@@ -357,13 +392,22 @@
                 total_score.innerHTML = `Счёт: ${setting.score}`;
             }
 
-            item.y += levels.currentSpeed / 2;
+            item.y += Math.floor(1 + Math.random() + (levels.currentSpeed / 3));
             item.style.top = item.y + "px";
 
             if (item.y >= document.documentElement.clientHeight) {
                 item.y = -100 * setting.traffic;
                 item.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - car.offsetWidth)) + "px";
             }
+
+            // if ((!setting.signal.paused && setting.signal.currentTime < 1 && (car.offsetTop - (item.offsetTop + item.offsetHeight) < 100 && car.offsetTop - (item.offsetTop + item.offsetHeight) > 0)) && (Math.abs(item.offsetLeft - car.offsetLeft) < car.offsetWidth)) {
+            //     if (item.offsetLeft - item.offsetWidth < 0) {
+            //         item.style.left = item.offsetLeft + item.offsetWidth + 'px';
+            //     } else {
+            //         item.style.left = item.offsetLeft - item.offsetWidth + 'px';
+            //     }
+            //     console.log('another');
+            // }
         });
     }
 
@@ -445,11 +489,15 @@
         intro.classList.remove('hide');
     });
 
-    sound.addEventListener('click', event => {
+    soundBox.addEventListener('click', event => {
         const target = event.target;
         if (target.classList.contains('sound')) {
             setting.sound = !setting.sound;
             toggleSound()
+        }
+        if (target.classList.contains('music')) {
+            setting.music = !setting.music;
+            toggleMusic()
         }
     });
 
@@ -548,32 +596,44 @@
     });
 
     document.body.addEventListener('keydown', event => {
+        event.preventDefault();
         const keyCode = event.keyCode;
         if (keyCode === 27 && start.classList.contains('hide')) {
             pause.classList.toggle('hide');
             setting.start = !setting.start;
-            if (setting.start) playGame();
+            setting.song.pause();
+            if (setting.start) {
+                playGame();
+                if (setting.music) setting.song.play();
+            }
         }
         if (keyCode === 27 && !authors.classList.contains('hide')) {
             authors.classList.add('hide');
             gameMenu.classList.remove('hide');
             sound.classList.remove('hide');
         }
-        if (keyCode === 16 && start.classList.contains('hide')) {
+        if (keyCode === 90 && start.classList.contains('hide')) {
             setting.signal.play();
         }
+        // Sound
         if (keyCode === 88) {
             setting.sound = !setting.sound;
             toggleSound();
         }
+        // Music
+        if (keyCode === 83) {
+            setting.music = !setting.music;
+            toggleMusic();
+        }
+        // console.log(keyCode);
     });
 
     document.body.addEventListener('keyup', event => {
         const keyCode = event.keyCode;
-        if (keyCode === 16) {
-            setting.signal.pause();
-            setting.signal.currentTime = 0;
-        }
+        // if (keyCode === 90) {
+        //     setting.signal.pause();
+        //     setting.signal.currentTime = 0;
+        // }
     });
 
     // console.log('../../sdsd.jpg'.substring('../../sdsd.jpg'.lastIndexOf('/') + 1, '../../sdsd.jpg'.lastIndexOf('.')));

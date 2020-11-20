@@ -172,7 +172,7 @@ table {
 }
 
 .game {
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     background-size: cover;
     z-index: 100;
 }
@@ -272,6 +272,8 @@ table {
 .btn_exit {
     background: brown;
     color: #fff;
+    border: none;
+    padding: 10px 18px;
 }
 
 .version {
@@ -332,10 +334,18 @@ table {
     top: 10;
     left: 10;
     z-index: 1001;
+    display: flex;
 }
 
-.sound {
+.sound,
+.music {
     cursor: pointer;
+}
+
+.box-sound {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
 }
 
 
