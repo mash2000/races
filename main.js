@@ -1,4 +1,9 @@
 (function() {
+    /******************************************* */
+    //  Игра "Races"
+    //  Автор: Ширшиков Максим
+    //  Курсовая работа
+    /******************************************* */
     const score = document.querySelector('.score'),
         soundBox = document.querySelector('.soundBox'),
         sound = document.querySelector('.box-sound'),
@@ -12,6 +17,7 @@
         mess = document.querySelector('.mess'),
         gameover = document.querySelector('.gameover'),
         btn_choose = document.querySelector('.btn_choose'),
+        btns_gameover = document.querySelector('.btns_gameover'),
         btn_replay = document.querySelector('.btn_replay'),
         btn_exit = document.querySelector('.btn_exit'),
         block_levels = document.querySelector('.levels'),
@@ -23,16 +29,20 @@
         new_record = document.querySelector('.new_record'),
         speedmetr = document.querySelector('.speedmetr'),
 
+        // Создание машины
         car = document.createElement('div');
-
+    // Добавление мужного класса
     car.classList.add('car');
 
+    // Рекорды игрока
     const records = JSON.parse(localStorage.getItem('records')) || {
+        // Лучшие результаты
         bestRecord: {
             easy: 0,
             norm: 0,
             hard: 0
         },
+        // Другие результаты
         otherRecords: {
             easy: [],
             norm: [],
@@ -40,6 +50,7 @@
         }
     };
 
+    // Клавиши нажатия стрелок
     const keys = {
         ArrowUp: false,
         ArrowDown: false,
@@ -47,51 +58,56 @@
         ArrowLeft: false
     };
 
+    // Настройки игры
     const setting = {
-        start: false,
-        score: 0,
-        engine: new Audio(),
-        brake: new Audio(),
-        crash: new Audio(),
-        acceleration: new Audio(),
-        signal: new Audio(),
-        song: new Audio(),
-        cars: ['enemy', 'enemy2'],
-        sound: false,
-        music: false,
-        spareCar: null,
+        start: false, /* Запущена игра? */
+        score: 0, // Очки
+        engine: new Audio(), // Звук двигателя
+        brake: new Audio(), // Звук тормоза
+        crash: new Audio(), // Звук аварии
+        acceleration: new Audio(), // Звук ускорение
+        song: new Audio(), // Музыка в игре
+        cars: ['enemy', 'enemy2'], // Вражеские машины
+        sound: false, // Звук
+        music: false, // Музыка
+        traffic: 4, // Кол-во машин на дороге для спавна
+        // Выбор автомобиля игрока
         vehicles: [
-            { name: "Mersedes", maxSpeed: 22, vehicle: 'player', chose: true },
-            { name: "Mitsubishi", maxSpeed: 20, vehicle: 'player2', chose: false },
+            { name: "Mersedes", maxSpeed: 28, vehicle: 'player', chose: true },
+            { name: "Mitsubishi", maxSpeed: 24, vehicle: 'player2', chose: false },
         ],
+        // Темы локации гонки
         themes: [
             { bg: "bg-1", chose: true, color: "rgb(0,0,0)" },
             { bg: "bg-2", chose: false, color: "rgb(0,0,0)" },
             { bg: "bg-3", chose: false, color: "rgb(0,0,0)" },
         ],
-        smooth: 6,
-        t: null,
-        minSpeed: 2.5,
-        balance: 0,
-        maxAngle: 5,
-        boost: 3000,
-        currentPunct: 0,
-        currentBtn: 0,
+        smooth: 6, // Погрешность столкновения с другой машиной
+        // t: null, 
+        minSpeed: 2.5, // Минимальная скорость
+        balance: 0, // Угол поворота авто игрока при повороте
+        maxAngle: 5, // Максимальный угол поворота
+        boost: 3000, // Чек-поинт очков, при достижении которого игра ускоряется, а сама точка увеличивается
+        currentPunct: 0, // Текущий выбранный пункт меню
+        currentBtn: 0, // Текущая выбранная кнопка уро
+        margin: null,
+        speed: null
     };
 
     const levels = {
         easy: {
             speed: 4,
-            traffic: 7
+            margin: 300
         },
         norm: {
-            speed: 7,
-            traffic: 5
+            speed: 8,
+            margin: 200
         },
         hard: {
-            speed: 10,
-            traffic: 4
+            speed: 12,
+            margin: 100
         },
+        traffic: 4,
         currentSpeed: null,
         maxSpeed: null
     };
@@ -99,7 +115,7 @@
     const saveRecords = () => localStorage.setItem('records', JSON.stringify(records));
 
     function getQuantityElements(heightElement) {
-        return document.documentElement.clientHeight / heightElement + 1;
+        return document.documentElement.clientHeight / heightElement;
     }
 
     setting.song.src = './audio/song.mp3';
@@ -121,6 +137,7 @@
             levels.currentSpeed = setting.speed;
         }
 
+        // Дорожная полоса
         for (let i = 0; i < getQuantityElements(100); i++) {
             const line = document.createElement('div');
             line.classList.add('line');
@@ -131,10 +148,10 @@
         }
 
         // спавн автомобилей
-        for (let i = 0; i < getQuantityElements(100 * setting.traffic); i++) {
+        for (let i = 0; i < getQuantityElements(setting.margin/2 * setting.traffic); i++) {
             const enemy = document.createElement('div');
             enemy.classList.add('enemy');
-            enemy.y = -(Math.floor(25 + Math.random() + 125)) * setting.traffic * (i + 1);
+            enemy.y = -(Math.floor(setting.margin/1.5 + Math.random() + car.offsetHeight * 1.5)) * setting.traffic * (i + 1) - (car.offsetHeight*3);
             enemy.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 50)) + 'px';
             enemy.style.top = enemy.y + 'px';
             enemy.style.background = `transparent url(./image/${setting.cars[Math.floor(Math.random()*setting.cars.length)]}.png) center / cover no-repeat`;
@@ -174,9 +191,6 @@
 
         setting.acceleration.src = './audio/acceleration.mp3';
         setting.acceleration.loop = true;
-
-        setting.signal.src = './audio/signal.mp3';
-        setting.signal.loop = false;
 
         if (setting.music) {
             setting.song.currentTime = 0;
@@ -315,8 +329,7 @@
             }
             if (setting.score > setting.boost) {
                 setting.boost *= 3;
-                setting.traffic++;
-                console.log(setting.traffic + 'cars');
+                // setting.speed += 10;
             }
             car.style.left = setting.x + 'px';
             car.style.top = setting.y + 'px';
@@ -364,7 +377,7 @@
             let sm = setting.smooth;
 
             if (carRect.top + sm <= enemyRect.bottom && carRect.right - sm >= enemyRect.left && carRect.left + sm <= enemyRect.right && carRect.bottom - sm >= enemyRect.top) {
-                if (setting.speed == levels.easy.speed && setting.traffic == levels.easy.traffic) {
+                if (setting.speed == levels.easy.speed) {
                     if (setting.score > records.bestRecord.easy) {
                         console.log('New Record! Level: easy');
                         new_record.classList.remove('hide');
@@ -373,7 +386,7 @@
                     } else {
                         records.otherRecords.easy.push(setting.score);
                     }
-                } else if (setting.speed == levels.norm.speed && setting.traffic == levels.norm.traffic) {
+                } else if (setting.speed == levels.norm.speed) {
                     if (setting.score > records.bestRecord.norm) {
                         console.log('New Record! Level: norm');
                         new_record.classList.remove('hide');
@@ -382,7 +395,7 @@
                     } else {
                         records.otherRecords.norm.push(setting.score);
                     }
-                } else if (setting.speed == levels.hard.speed && setting.traffic == levels.hard.traffic) {
+                } else if (setting.speed == levels.hard.speed) {
                     if (setting.score > records.bestRecord.hard) {
                         console.log('New Record! Level: hard');
                         new_record.classList.remove('hide');
@@ -402,13 +415,19 @@
                 gameover.classList.remove('hide');
                 total_score.innerHTML = `Счёт: ${setting.score}`;
             }
-
-            item.y += Math.floor(1 + Math.random() + (levels.currentSpeed / 3));
+            if (keys.ArrowDown){
+                item.y -= Math.floor((setting.speed));
+            } else if (keys.ArrowUp){
+                item.y += Math.floor((setting.speed));
+            } else {
+                item.y += Math.floor((setting.speed*0.8));
+            }
             item.style.top = item.y + "px";
 
             if (item.y >= document.documentElement.clientHeight) {
-                item.y = -100 * setting.traffic;
-                item.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - car.offsetWidth)) + "px";
+                item.y = -(Math.floor(100 + Math.random() + car.offsetHeight)) * setting.traffic;
+                item.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 50)) + 'px';
+                item.style.background = `transparent url(./image/${setting.cars[Math.floor(Math.random()*setting.cars.length)]}.png) center / cover no-repeat`;
             }
 
             // if ((!setting.signal.paused && setting.signal.currentTime < 1 && (car.offsetTop - (item.offsetTop + item.offsetHeight) < 100 && car.offsetTop - (item.offsetTop + item.offsetHeight) > 0)) && (Math.abs(item.offsetLeft - car.offsetLeft) < car.offsetWidth)) {
@@ -479,6 +498,16 @@
         gameMenu.classList.add('hide');
     }
 
+    // Выход в главное меню
+    function exit(){
+        gameArea.classList.add('hide');
+        pause.classList.add('hide');
+        gameMenu.classList.remove('hide');
+        start.classList.remove('hide');
+        block_levels.classList.add('hide');
+        intro.classList.remove('hide');
+    }
+
     // Блок рекорды
     function record() {
         results.classList.remove('hide');
@@ -523,13 +552,13 @@
         if (target.closest('.level') || target.classList.contains('.level')) {
             if (target.classList.contains('easy')) {
                 setting.speed = levels.easy.speed;
-                setting.traffic = levels.easy.traffic;
+                setting.margin = levels.easy.margin;
             } else if (target.classList.contains('norm')) {
                 setting.speed = levels.norm.speed;
-                setting.traffic = levels.norm.traffic;
+                setting.margin = levels.norm.margin;
             } else if (target.classList.contains('hard')) {
                 setting.speed = levels.hard.speed;
-                setting.traffic = levels.hard.traffic;
+                setting.margin = levels.hard.margin;
             }
             levels.currentSpeed = setting.speed;
             block_levels.classList.add('hide');
@@ -553,14 +582,7 @@
     // Рестарт игры
     btn_replay.addEventListener('click', startGame);
     // Выход в меню
-    btn_exit.addEventListener('click', e => {
-        gameArea.classList.add('hide');
-        pause.classList.add('hide');
-        gameMenu.classList.remove('hide');
-        start.classList.remove('hide');
-        block_levels.classList.add('hide');
-        intro.classList.remove('hide');
-    });
+    btn_exit.addEventListener('click', exit);
     // Выбор 
     btn_choose.addEventListener('click', () => {
         gameover.classList.add('hide');
@@ -692,9 +714,6 @@
                 })
             }
         }
-        if (keyCode === 90 && start.classList.contains('hide')) {
-            setting.signal.play();
-        }
         // Sound
         if (keyCode === 88 && authors.classList.contains('hide')) {
             setting.sound = !setting.sound;
@@ -774,18 +793,54 @@
                 let btn = setting.currentBtn;
                 if (btn === 0) {
                     setting.speed = levels.easy.speed;
-                    setting.traffic = levels.easy.traffic;
+                    setting.traffic = levels.traffic;
+                    setting.margin = levels.easy.margin;
                 } else if (btn === 1) {
                     setting.speed = levels.norm.speed;
-                    setting.traffic = levels.norm.traffic;
+                    setting.traffic = levels.traffic;
+                    setting.margin = levels.norm.margin;
                 } else if (btn === 2) {
                     setting.speed = levels.hard.speed;
-                    setting.traffic = levels.hard.traffic;
+                    setting.traffic = levels.traffic;
+                    setting.margin = levels.hard.margin;
                 }
                 levels.currentSpeed = setting.speed;
                 block_levels.classList.add('hide');
                 startGame();
             }
+        }
+        if (!gameover.classList.contains('hide')){
+            const btns = btns_gameover.querySelectorAll('.btn');
+            if (keyCode === 13){
+                btns.forEach(btn => {
+                    if (btn.classList.contains('chose_btn')){
+                        if (btn.classList.contains('btn_replay')){
+                            startGame();
+                        } else if (btn.classList.contains('btn_choose')){
+                            gameover.classList.add('hide');
+                            block_levels.classList.remove('hide');
+                            intro.classList.remove('hide');
+                            gameMenu.classList.add('hide');
+                        }
+                    }
+                });
+            } else if (keyCode === 37){
+                btns.forEach(btn => {
+                    btn.classList.remove('chose_btn');
+                });
+                btn_replay.classList.add('chose_btn');
+                console.log('left')
+            } else if (keyCode === 39){
+                btns.forEach(btn => {
+                    btn.classList.remove('chose_btn');
+                });
+                btn_choose.classList.add('chose_btn');
+                console.log('right')
+            }
+        }
+        // Если пауза в игре
+        if (!pause.classList.contains('hide')){
+            if (keyCode === 13) exit();
         }
         // console.log(keyCode);
     });
@@ -837,14 +892,6 @@
                     break;
             }
         }
-    });
-
-    document.body.addEventListener('keyup', event => {
-        const keyCode = event.keyCode;
-        // if (keyCode === 90) {
-        //     setting.signal.pause();
-        //     setting.signal.currentTime = 0;
-        // }
     });
 
     // console.log('../../sdsd.jpg'.substring('../../sdsd.jpg'.lastIndexOf('/') + 1, '../../sdsd.jpg'.lastIndexOf('.')));
