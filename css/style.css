@@ -1,0 +1,444 @@
+/** css code */
+
+.hide {
+    display: none;
+    visibility: hidden;
+}
+
+.car,
+.enemy {
+    width: 50px;
+    height: 100px;
+    position: absolute;
+    left: 125px;
+    bottom: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+.gameArea {
+    width: 300px;
+    height: 100%;
+    position: relative;
+    margin: auto;
+    background: #222;
+    overflow: hidden;
+}
+
+.line {
+    position: absolute;
+    width: 10px;
+    height: 50px;
+    background: #fff;
+}
+
+.game {
+    background-repeat: repeat-y;
+    background-size: cover;
+    z-index: 100;
+}
+
+.start {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 2rem 0;
+    text-align: center;
+    z-index: 200;
+    color: #000;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(235, 235, 235);
+}
+
+.score {
+    position: absolute;
+    right: 20px;
+    top: 0px;
+    margin: 0;
+    text-align: right;
+    line-height: 25px;
+    padding: 1rem 0;
+    z-index: 200;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-weight: bold;
+}
+
+.count {
+    font-weight: 300;
+}
+
+.logo {
+    font-size: 40px;
+    font-weight: 700;
+    font-family: "Porsche";
+    color: #360033;
+    color: -webkit-linear-gradient(to right, #360033, #0b8793);
+    color: linear-gradient(to right, #360033, #0b8793);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.mess {
+    display: none;
+    margin-bottom: 30px;
+    color: rgb(160, 44, 44);
+}
+
+.new_record {
+    margin-top: 15px;
+    font-size: 15px;
+    color: rgb(0, 139, 182);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.btns {
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin: 0px 5px;
+    cursor: pointer;
+    outline: none;
+    font-size: 18px;
+}
+
+.btn_replay {
+    background: rgb(28, 114, 148);
+    color: #fff;
+}
+
+.btn_choose {
+    background: green;
+    color: #fff;
+}
+
+.btn_exit {
+    background: brown;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+}
+
+.version {
+    position: absolute;
+    right: 20px;
+    bottom: 80px;
+    font-size: 20px;
+    color: #999;
+    font-weight: 500;
+}
+
+.levels {
+    margin-top: 20px;
+}
+
+.level {
+    border-radius: 4px;
+    padding: 13px 20px;
+    margin: 0px 10px;
+    display: inline-block;
+    color: #fff;
+    cursor: pointer;
+    transition-duration: 0.2s;
+    border: 2px soild transparent;
+}
+
+.level:hover,
+.btn:hover {
+    transition-duration: 0.2s;
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 2px 0px #111;
+    border-color: #000;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+}
+
+.chose_btn {
+    transition-duration: 0.2s;
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 2px 0px #111;
+    border-color: #000;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+}
+
+.level:active,
+.btn:active {
+    transition-duration: 0.2s;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.easy {
+    background: green;
+}
+
+.norm {
+    background: rgb(28, 114, 148);
+}
+
+.hard {
+    background: rgb(160, 44, 44);
+}
+
+.soundBox {
+    position: fixed;
+    top: 10;
+    left: 10;
+    z-index: 1001;
+    display: flex;
+}
+
+.sound,
+.music {
+    cursor: pointer;
+}
+
+.box-sound {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+
+/** game-menu */
+
+.game-link {
+    display: block;
+    text-decoration: none;
+    color: #000;
+    transition-duration: .1s;
+    margin-top: 20px;
+}
+
+.focused {
+    transition-duration: .1s;
+    transform: translateY(-15%);
+    box-shadow: 0px 1px 0px 0px #000;
+}
+
+.game-link:active {
+    transform: translateY(0%);
+}
+
+.back {
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 24px;
+    color: #000;
+    font-weight: 400;
+    font-size: 20px;
+    position: relative;
+    line-height: 20px;
+}
+
+.back::before {
+    content: "←";
+    position: absolute;
+    left: -50%;
+    top: -2px;
+}
+
+.pause {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-family: "Roboto", sans-serif;
+    color: #000;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.bgColor {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.boxColor {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    background-size: cover;
+    margin-right: 10px;
+}
+
+.cars {
+    margin-top: 20px;
+}
+
+.changeCar {
+    margin-top: 20px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.vehicle {
+    width: 60px;
+    cursor: pointer;
+}
+
+.lbl_car {
+    display: flex;
+    flex-direction: column;
+}
+
+.choseColor {
+    border: 3px solid rgb(253, 113, 113);
+}
+
+
+/** reference */
+
+.instructions {
+    margin-top: 20px;
+    font-weight: normal;
+}
+
+.keys {
+    width: 100%;
+}
+
+.keys td {
+    width: 50%;
+    padding: 10px 0px;
+    font-size: 20px;
+}
+
+.keys .key {
+    text-align: center;
+}
+
+.keys .action {
+    text-align: left;
+}
+
+.authors {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+.congrulations {
+    text-align: center;
+    animation-name: authors;
+    animation-duration: 20s;
+    animation-fill-mode: forwards;
+    -moz-animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    font-weight: normal;
+}
+
+.company {
+    font-weight: bold;
+    font-family: "Porsche";
+    display: block;
+    margin-top: 15px;
+}
+
+.close {
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    color: #000;
+    font-size: 35px;
+}
+
+.list-action {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.box-results {
+    margin: 50px 0px;
+}
+
+.result {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.res-value {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.best-title {
+    font-size: 28px;
+}
+
+.record-title {
+    font-size: 20px;
+}
+
+.speedmetr {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 18px;
+    background-color: #000;
+    color: #fff;
+    padding: 20px 15px;
+    width: 200px;
+}
+
+.speedView {
+    text-align: center;
+    font-size: 24px;
+    width: 100%;
+}
+
+.speedStatus {
+    width: 200px;
+    height: 20px;
+    margin-top: 11px;
+    position: relative;
+    transform-style: preserve-3d;
+    overflow-x: hidden;
+    background: linear-gradient(90deg, #05FF00 0%, #FFA800 52.08%, #FF0000 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF);
+    clip-path: polygon(0% 70%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.moveSpeed {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
+@keyframes authors {
+    0% {
+        transform: translateY(450%);
+    }
+    100% {
+        transform: translateY(-200%)
+    }
+}
