@@ -277,10 +277,10 @@
             moveRoad();
             moveEnemy();
             // Прокуртка фона для создания эффекта движения пространства
-            game.style.backgroundPositionY = setting.score % document.body.clientHeight + 'px';
-            if (parseInt(game.style.backgroundPositionY) >= document.body.clientHeight) {
-                game.style.backgroundPositionY = 0 + 'px'; // Заново, если фон прокрутился на максимум
-            }
+            game.style.backgroundPositionY = setting.score + 'px';
+            // if (parseInt(game.style.backgroundPositionY) >= document.body.clientHeight) {
+            //     game.style.backgroundPositionY = 0 + 'px'; // Заново, если фон прокрутился на максимум
+            // }
             // Отслеживание левой стрелки
             if (keys.ArrowLeft && setting.x > 0) {
                 // Поворот машины налево
@@ -347,7 +347,7 @@
                 setting.acceleration.currentTime = 0;
                 setting.engine.play();
             }
-            // Если машина не поворачивает, она поворачивается в нормальное положение
+            // Если машина не поворачивает, она возвращается в нормальное положение
             if (!keys.ArrowLeft && !keys.ArrowRight) {
                 if (setting.balance < 0) {
                     setting.balance += 0.5;
@@ -482,20 +482,20 @@
     function getBgs() {
         let bg = document.querySelector('.bgColor');
         bg.innerHTML = '';
-        let bgs = setting.themes;
-        bgs.forEach(bcolor => {
-            let clr = document.createElement('li');
-            clr.classList.add('color');
-            let bxColor = document.createElement('div');
-            bxColor.title = bcolor.name;
-            bxColor.classList.add('boxColor');
-            bxColor.style.backgroundImage = `url(../image/${bcolor.bg}.jpg)`;
-            if (bcolor.chose) {
-                bxColor.classList.add('choseColor');
-                score.style.color = bcolor.color;
+        let themes = setting.themes;
+        themes.forEach(theme => {
+            let li = document.createElement('li');
+            li.classList.add('color');
+            let bxLi = document.createElement('div');
+            bxLi.title = theme.name;
+            bxLi.classList.add('boxColor');
+            bxLi.style.backgroundImage = `url(../image/${theme.bg}.jpg)`;
+            if (theme.chose) {
+                bxLi.classList.add('choseColor');
+                score.style.color = theme.color;
             }
-            clr.appendChild(bxColor);
-            bg.appendChild(clr);
+            li.appendChild(bxLi);
+            bg.appendChild(li);
         });
     }
 

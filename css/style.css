@@ -36,6 +36,7 @@
     background-repeat: repeat-y;
     background-size: cover;
     z-index: 100;
+    background-position-y: 0px;
 }
 
 .start {
@@ -322,6 +323,15 @@
 
 .keys {
     width: 100%;
+}
+
+.reference {
+    width: 600px;
+}
+
+.refer-flex {
+    display: flex;
+    justify-content: space-between;
 }
 
 .keys td {
