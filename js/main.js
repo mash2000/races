@@ -460,11 +460,11 @@
             }
             // Если ускоряемся, догоняем вражеские авто
             else if (keys.ArrowUp) {
-                item.y += Math.floor((setting.speed));
+                item.y += Math.floor((setting.speed * 0.9));
             }
             // Едем с нормальной скоростью
             else {
-                item.y += Math.floor((setting.speed * 0.8));
+                item.y += Math.floor((setting.speed * 0.3));
             }
             // Перемещения вражеской машины
             item.style.top = item.y + "px";
