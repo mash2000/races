@@ -69,8 +69,8 @@
         acceleration: new Audio(), // Звук ускорение
         song: new Audio(), // Музыка в игре
         cars: ['enemy', 'enemy2'], // Вражеские машины
-        sound: false, // Звук
-        music: false, // Музыка
+        sound: true, // Звук
+        music: true, // Музыка
         traffic: 4, // Кол-во машин на дороге для спавна
         // Выбор автомобиля игрока
         vehicles: [
@@ -123,7 +123,7 @@
         return document.documentElement.clientHeight / heightElement;
     }
 
-    setting.song.src = './audio/main.mp3'; // Подключение песни
+    setting.song.src = './audio/main_theme.mp3'; // Подключение песни
     setting.song.loop = true; // Повтор музыки
     setting.song.autoplay = true; // Играть при загрузке страницы
 
@@ -168,14 +168,6 @@
             enemy.style.background = `transparent url(./image/${setting.cars[Math.floor(Math.random()*setting.cars.length)]}.png) center / cover no-repeat`;
             gameArea.appendChild(enemy);
         }
-        document.querySelectorAll('.enemy').forEach(enemy => {
-            document.querySelectorAll('.enemy').forEach(enm => {
-                if (Math.abs(enemy.offsetTop - enm.offsetTop) <= enemy.offsetHeight) {
-                    enemy.style.top -= enemy.offsetHeight + 'px';
-                    console.log('top');
-                }
-            })
-        });
         setting.score = 0;
         setting.balance = 0;
         setting.start = true;
@@ -203,7 +195,7 @@
         setting.acceleration.src = './audio/acceleration.mp3';
         setting.acceleration.loop = true;
 
-        setting.song.src = './audio/song.mp3';
+        setting.song.src = './audio/race_theme.mp3';
 
         if (setting.music) {
             setting.song.currentTime = 0;
@@ -446,7 +438,7 @@
                 saveRecords(); // Запись рекордов
                 setting.crash.play(); // Звук аварии
                 setting.start = false; // Игра окончена
-                setting.song.src = './audio/main.mp3';
+                setting.song.src = './audio/main_theme.mp3';
                 setting.song.pause(); // Выключение музыки
                 mess.style.display = 'block'; // Повяление сообщение об сообщение
                 score.classList.add('hide'); // Скрытие очков 
@@ -528,7 +520,7 @@
     // Возвращение назад в меню
     function back(target) {
         if ((!target.parentNode.parentNode.classList.contains('intro') && setting.music) || (target.parentNode.classList.contains('levels') && setting.song.paused && setting.music)) {
-            setting.song.src = './audio/main.mp3';
+            setting.song.src = './audio/main_theme.mp3';
             setting.song.play();
         }
         gameArea.classList.add('hide');
@@ -553,7 +545,7 @@
         block_levels.classList.add('hide');
         intro.classList.remove('hide');
         if (setting.music) {
-            setting.song.src = './audio/main.mp3';
+            setting.song.src = './audio/main_theme.mp3';
             setting.song.play();
         }
     }
@@ -623,7 +615,7 @@
             document.querySelectorAll('.level').forEach(lvl => { lvl.classList.remove('chose_btn') });
             target.classList.add('chose_btn');
         }
-    })
+    });
 
     // Нажатие стрелок
     document.addEventListener('keydown', startRun);
@@ -634,7 +626,7 @@
     btn_replay.addEventListener('click', startGame);
     // Выход в меню
     btn_exit.addEventListener('click', exit);
-    // Выбор 
+    // Выбор уровня в меню "Проигрыша"
     btn_choose.addEventListener('click', () => {
         gameover.classList.add('hide');
         start.classList.remove('hide');
